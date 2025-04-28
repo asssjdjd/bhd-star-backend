@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\FilmController;
+use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,5 +43,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('admin/film/create', 'store') -> name('admin.film.create');
         Route::put('admin/film/update', 'update') -> name('admin.film.update');
         Route::delete('admin/film/delete', 'delete') -> name('admin.film.delete');
+    });
+
+    Route::controller(PromotionController::class) -> group(function(){
+        Route::get('admin/promotion/index', 'index') -> name('admin.promotion.index');
+        Route::post('admin/promotion/create', 'store') -> name('admin.promotion.create');
+        Route::put('admin/promotion/update', 'update') -> name('admin.promotion.update');
+        Route::delete('admin/promotion/delete', 'delete') -> name('admin.promotion.delete');
     });
 });
