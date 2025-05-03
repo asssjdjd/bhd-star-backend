@@ -32,7 +32,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Route::post('admin/category/create' , [CategoryController::class, 'store']);
 // Route::get('admin/category', [CategoryController::class, 'index']);
 
-Route::group(['middleware' => 'auth:sanctum'], function(){
+Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     Route::controller(CategoryController::class) -> group(function(){
         Route::get('/admin/category', 'index') -> name('admin.category.index');
         Route::post('/admin/category/create', 'store') -> name('admin.category.create');

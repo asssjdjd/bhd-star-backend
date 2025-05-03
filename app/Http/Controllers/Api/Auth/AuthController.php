@@ -44,42 +44,44 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request){
-        if (Auth::attempt([
-            'email' => $request -> email,
-            'password' => $request -> password
-        ])) 
-        {
-            DB::table('personal_access_tokens') 
-                        -> where('tokenable_id', Auth::id()) 
-                        -> delete();
-            $token = User::find(Auth::id()) 
-                        -> createToken(Auth::user() -> name) 
-                        -> plainTextToken;
-            
-            if(Auth::user() -> is_admin){
-                return response() -> json([
-                    'data' => Auth::user(),
-                    'token' => $token,
-                    'status' => 200,
-                    'message' => 'Đăng nhập thành công',
-                    'is_admin' => true
-                ], 200);
-            }
-            return response() -> json([
-                'data' => Auth::user(),
-                'token' => $token,
-                'status' => 200,
-                'message' => 'Đăng nhập thành công',
-                'is_admin' => false
-            ], 200);
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return response()->json([
+                'data' => null,
+                'status' => 401,
+                'message' => 'Email hoặc mật khẩu không chính xác'
+            ], 401);
         }
 
-        return response() -> json([
-            'data' => null, 
-            'status' => 401,
-            'message' => 'Đăng nhập thất bại'
-        ], 401);
+        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            return response()->json([
+                'data' => null,
+                'status' => 401,
+                'message' => 'Mật khẩu không chính xác'
+            ], 401);
+        }
+
+        DB::table('personal_access_tokens')
+            ->where('tokenable_id', $user->id)
+            ->delete();
+
+        $token = $user->createToken($user->name)->plainTextToken;
+
+        return response()->json([
+            'data' => $user,
+            'token' => $token,
+            'status' => 200,
+            'message' => 'Đăng nhập thành công',
+            'is_admin' => (bool)$user->is_admin
+        ], 200);
     }
 
     public function logout(Request $request){
