@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\FilmController;
+use App\Http\Controllers\Api\Admin\FoodComboController;
 use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -58,5 +59,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::post('admin/theater/create', 'store') -> name('admin.theater.create');
         Route::put('admin/theater/update', 'update') -> name('admin.theater.update');
         Route::delete('admin/theater/delete', 'delete') -> name('admin.theater.delete');
+    });
+
+    Route::controller(FoodComboController::class) -> group(function(){
+        Route::get('admin/food-combo/index', 'index') -> name('admin.food-combo.index');
+        Route::post('admin/food-combo/create', 'store') -> name('admin.food-combo.create');
+        Route::put('admin/food-combo/update', 'update') -> name('admin.food-combo.update');
+        Route::delete('admin/food-combo/delete', 'delete') -> name('admin.food-combo.delete');
     });
 });
