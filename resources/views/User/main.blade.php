@@ -11,7 +11,10 @@
         @include('User.layouts.navbar')
 
         <!-- slide-header -->
-        @include('User.layouts.slide-header')
+        {{-- @include('User.layouts.slide-header') --}}
+        @if(Route::current() && Route::current()->getName() == 'home')
+            @include('User.layouts.slide-header')
+        @endif
 
         <!-- main -->
         <div class="main mt-5" style="width: 100%;">

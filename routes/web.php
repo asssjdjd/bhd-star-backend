@@ -16,4 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(HomeController::class) -> group(function(){
     Route::get('/', 'index') -> name('home');
+    // viet them vao day 
+    Route::get('/login', 'login') -> name('login');
+
 });
+
+
+
+
