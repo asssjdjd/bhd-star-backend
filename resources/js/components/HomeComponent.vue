@@ -1,6 +1,6 @@
 <template>
     <div id="now-showing-slide">
-        <div class="fs-3  container mt-5 mb-4 d-flex justify-content-center align-items-center fw-bold "
+        <div  class="fs-3  container mt-5 mb-4 d-flex justify-content-center align-items-center fw-bold "
             style="color: #72be43; border: 1px solid; width: 460px; border-radius: 10px;">
             NOW SHOWING/SNEAK SHOW
         </div>
@@ -33,10 +33,10 @@
                                 <a href="#" class="fw-bold" style="text-decoration: none; color:#72be43;">Horror</a>
                             </div>
                         </li>
-                        
-                    
+
+
                     </ul>
-                    
+
                     <div class="swiper-pagination"></div>
 
                     <!-- If we need navigation buttons -->
@@ -66,7 +66,7 @@
                 <ul class="card-list swiper-wrapper">
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/combo-conan-moi.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/combo-conan-moi.jpg"
                                 class="card-image" style="width: 400px; height: 400px; object-fit: cover;">
                             <h4 class="cart-title fw-bold fs-6">
                                 COMBO “CONAN – THÁM TỬ LỪNG DANH”
@@ -78,7 +78,7 @@
                     </li>
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2025/02/COMBOSLDO-01-min.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2025/02/COMBOSLDO-01-min.jpg"
                                 class="card-image" style="width: 400px; height: 400px; object-fit: cover;">
                             <h4 class="cart-title fw-bold fs-6">
                                 MÙA YÊU THƯƠNG, SAN SẺ NGỌT NGÀO
@@ -90,7 +90,7 @@
                     </li>
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/11/467403530_1008787251287761_8367159137306975953_n.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/11/467403530_1008787251287761_8367159137306975953_n.jpg"
                                 class="card-image" style="width: 400px; height: 400px; object-fit: cover;">
                             <h4 class="cart-title fw-bold fs-6">
                                 COMBO XMAS SIÊU CUTE TẠI BHD STAR
@@ -103,7 +103,7 @@
                     </li>
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/10/Ao-thun-Sai-gon-ink-vuong-2.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/10/Ao-thun-Sai-gon-ink-vuong-2.jpg"
                                 class="card-image" style="width: 400px; height: 400px; object-fit: cover;">
                             <h4 class="cart-title fw-bold fs-6">
                                 COMBO “ÁO THUN BHDS x SAIGONINK” SIÊU CHẤT
@@ -115,7 +115,7 @@
                     </li>
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/z6098497568270_f2fa708435c9ba93ce1fa26f55729c3f.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/z6098497568270_f2fa708435c9ba93ce1fa26f55729c3f.jpg"
                                 class="card-image" style="width: 400px; height: 400px; object-fit: cover;">
                             <h4 class="cart-title fw-bold fs-6">
                                 COMBO “CONAN – THÁM TỬ LỪNG DANH”
@@ -126,8 +126,8 @@
                         </a>
                     </li>
 
-                
-                    
+
+
                 </ul>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev fw-bold" style = "color:#72be43"></div>
@@ -194,7 +194,7 @@
                                 CƠN BÃO “SALE” SIÊU KHỦNG TẠI BHD STAR
                             </h4>
                             <p>
-                                ĐÓN NHẬN CƠN BÃO “SALE” SIÊU KHỦNG KHIẾP TẠI BHD STAR CINEPLEX. + Tặng ngay 01 PEPSI (trị giá 36.000đ) khi mua 2 vé xem phim bất kì. + 
+                                ĐÓN NHẬN CƠN BÃO “SALE” SIÊU KHỦNG KHIẾP TẠI BHD STAR CINEPLEX. + Tặng ngay 01 PEPSI (trị giá 36.000đ) khi mua 2 vé xem phim bất kì. +
                                 Chỉ với 59.000đ có ngay COMBO “ĐÃ KHÁT ĐÃ THÈM” (1 Bắp + 1 nước). * Ưu đãi áp dụng từ: 04.01.2024 – 28.01.2025 (Không giới […]
                             </p>
                         </a>
@@ -206,7 +206,7 @@
                                 KHUYẾN MÃI ĐẶC BIỆT KHI XEM PHIM LINH MIÊU TẠI BHD STAR
                             </h4>
                             <p>
-                                CHÀO ĐÓN SIÊU BÃO LINH MIÊU SẮP ĐỔ BỘ TẠI BHD STAR Siêu ưu đãi cho đội nhóm khi đến xem phim tại BHD Star Cinplex từ ngày 11.11 – 18.11.2024 
+                                CHÀO ĐÓN SIÊU BÃO LINH MIÊU SẮP ĐỔ BỘ TẠI BHD STAR Siêu ưu đãi cho đội nhóm khi đến xem phim tại BHD Star Cinplex từ ngày 11.11 – 18.11.2024
                                 Thể lệ chương trình:Mỗi nhóm 3 người khi mua vé xem phim tại BHD Star sẽ được tặng ngay 1 VÉ XEM LINH MIÊU *Lưu ý: […]
                             </p>
                         </a>
@@ -387,14 +387,14 @@
                 <ul class="card-list swiper-wrapper border-0">
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2025/02/COMBOSLDO-01-min.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2025/02/COMBOSLDO-01-min.jpg"
                                 class="card-image">
                         </a>
                     </li>
-            
+
                     <li class="card-item swiper-slide d-flex" >
                         <a href="#" class="card-link" >
-                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/z6098497568270_f2fa708435c9ba93ce1fa26f55729c3f.jpg" 
+                            <img src="https://www.bhdstar.vn/wp-content/uploads/2024/09/z6098497568270_f2fa708435c9ba93ce1fa26f55729c3f.jpg"
                                 class="card-image">
                             <h4 class="cart-title fw-bold fs-6"></h4>
                         </a>
@@ -408,3 +408,64 @@
         </div>
     </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+const data = {
+    movies: [],
+    combos: [],
+    promotions: [],
+    comingSoon: []
+};
+
+export default {
+    data() {
+        return data;
+    },
+    mounted() {
+        this.getMovies();
+        this.getCombos();
+        this.getPromotions();
+        this.getComingSoon();
+    },
+    methods: {
+        getMovies() {
+            axios.get('/api/movies')
+                .then(response => {
+                    this.movies = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        getCombos() {
+            axios.get('/api/combos')
+                .then(response => {
+                    this.combos = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        getPromotions() {
+            axios.get('/api/promotions')
+                .then(response => {
+                    this.promotions = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        getComingSoon() {
+            axios.get('/api/coming-soon')
+                .then(response => {
+                    this.comingSoon = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    }
+};
+</script>

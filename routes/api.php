@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\FilmController;
 use App\Http\Controllers\Api\Admin\FoodComboController;
 use App\Http\Controllers\Api\Admin\PromotionController;
+use App\Http\Controllers\Api\Admin\ShowtimeController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
@@ -20,18 +21,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
+/* Auth routes */
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Route::post('admin/category/create' , [CategoryController::class, 'store']);
-// Route::get('admin/category', [CategoryController::class, 'index']);
 
+/* Admin routes */
 Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     Route::controller(CategoryController::class) -> group(function(){
         Route::get('/admin/category', 'index') -> name('admin.category.index');
@@ -67,4 +63,13 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
         Route::put('admin/food-combo/update', 'update') -> name('admin.food-combo.update');
         Route::delete('admin/food-combo/delete', 'delete') -> name('admin.food-combo.delete');
     });
+
+    Route::controller(ShowtimeController::class) -> group(function(){
+        Route::get('admin/showtime/index/{film_id}', 'index') -> name('admin.showtime.index');
+        Route::post('admin/showtime/create/{film_id}', 'store') -> name('admin.showtime.create');
+        Route::put('admin/showtime/update', 'update') -> name('admin.showtime.update');
+        Route::delete('admin/showtime/delete', 'delete') -> name('admin.showtime.delete');
+    });
 });
+
+/* User routes */
