@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Admin\ShowtimeController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\User\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -73,3 +74,12 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
 });
 
 /* User routes */
+Route::prefix('/user') -> group(function () {
+    Route::controller(HomeController::class) -> group(function(){
+        Route::get('/index', 'index') -> name('user.index');
+        Route::get('/shop', 'getShop') -> name('user.getShop');
+        Route::get('/theater-system', 'getTheaterSystem') -> name('user.get-theater-system');
+        Route::get('/theater-schedule', 'getTheaterSchedule') -> name('user.get-theater-schedule');
+        Route::get('/movie-schedule', 'getMovieSchedule') -> name('user.get-movie-schedule');
+    });
+});
