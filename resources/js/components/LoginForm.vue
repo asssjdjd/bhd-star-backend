@@ -74,8 +74,13 @@ export default {
         // Lưu token vào localStorage
         localStorage.setItem('token', response.data.token);
 
-        // Chuyển hướng người dùng sau khi đăng nhập thành công
-        window.location.href = 'http://127.0.0.1:8000/'; // Chuyển hướng về trang chủ
+        if (response.data.is_admin) {
+      // Chuyển hướng đến trang admin
+          window.location.href = 'http://127.0.0.1:8000/admin';
+        } else {
+          // Chuyển hướng đến trang người dùng
+          window.location.href = 'http://127.0.0.1:8000/';
+        }
       } catch (error) {
         // Debug lỗi nếu API trả về lỗi
         if (error.response) {
