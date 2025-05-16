@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Admin\ShowtimeController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\User\FilmController as UserFilmController;
 use App\Http\Controllers\Api\User\HomeController;
+use App\Http\Controllers\Api\User\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +27,6 @@ use Illuminate\Support\Facades\Route;
 /* Auth routes */
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 /* Admin routes */
@@ -76,7 +77,7 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     });
 });
 
-/* User routes */
+/* User routes (public) */
 Route::prefix('/user') -> group(function () {
     Route::controller(HomeController::class) -> group(function(){
         Route::get('/index', 'index') -> name('user.index');
@@ -84,5 +85,25 @@ Route::prefix('/user') -> group(function () {
         Route::get('/theater-system', 'getTheaterSystem') -> name('user.get-theater-system');
         Route::get('/theater-schedule', 'getTheaterSchedule') -> name('user.get-theater-schedule');
         Route::get('/movie-schedule', 'getMovieSchedule') -> name('user.get-movie-schedule');
+    });
+    Route::controller(UserFilmController::class) -> group(function(){
+        Route::get('/film/{id}', 'getFilm') -> name('user.getFilm');
+    });
+    Route::controller(TicketController::class) -> group(function(){
+        Route::get('/step1/{id}', 'step1') -> name('user.ticket.step1');
+        Route::post('/senday', 'senday') -> name('user.ticket.senday');
+    });
+});
+
+Route::middleware('auth:sanctum')->group(function() {
+    // Logout route
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // User authenticated routes
+    Route::prefix('/user')->group(function() {
+        Route::controller(TicketController::class)->group(function(){
+            Route::post('/step2', 'step2') -> name('user.ticket.step2');
+            Route::post('/step3', 'step3') -> name('user.ticket.step3');
+        });
     });
 });
