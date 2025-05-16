@@ -37,6 +37,32 @@ class FoodComboController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $food = Food_combo::find($id);
+            if (!$food) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Không tìm thấy combo'
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Lấy thông tin combo thành công',
+                'food' => $food
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error("FoodCombo get detail error: " . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin combo'
+            ], 500);
+        }
+    }
+
+
     public function store(Request $request)
     {
         try {
@@ -57,7 +83,7 @@ class FoodComboController extends Controller
             }
 
             $image = $request->file('image');
-            
+
             $data = $request->all();
             $data['created_at'] = Carbon::now();
             $imageData = base64_encode(file_get_contents($image -> getRealPath()));
@@ -65,7 +91,9 @@ class FoodComboController extends Controller
             $apikey = env('IMGBB_API_KEY');
             $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
 
-            $response = Http::asForm()->post($url, [
+            $response = Http::withOptions([
+                'verify' => env('CURL_CERT')
+            ])->asForm()->post($url, [
                 'image' => $imageData
             ]);
 

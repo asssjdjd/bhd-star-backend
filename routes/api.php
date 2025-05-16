@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Admin\ShowtimeController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\Api\User\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     Route::controller(PromotionController::class) -> group(function(){
         Route::get('admin/promotion/index', 'index') -> name('admin.promotion.index');
         Route::post('admin/promotion/create', 'store') -> name('admin.promotion.create');
+        Route::get('admin/promotion/{id}', 'show')->name('admin.promotion.edit');
         Route::put('admin/promotion/update', 'update') -> name('admin.promotion.update');
         Route::delete('admin/promotion/delete', 'delete') -> name('admin.promotion.delete');
     });
@@ -54,6 +55,7 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     Route::controller(TheaterController::class) -> group(function(){
         Route::get('admin/theater/index', 'index') -> name('admin.theater.index');
         Route::post('admin/theater/create', 'store') -> name('admin.theater.create');
+        Route::get('admin/theater/{id}', 'show')->name('admin.theater.edit');
         Route::put('admin/theater/update', 'update') -> name('admin.theater.update');
         Route::delete('admin/theater/delete', 'delete') -> name('admin.theater.delete');
     });
@@ -61,6 +63,7 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
     Route::controller(FoodComboController::class) -> group(function(){
         Route::get('admin/food-combo/index', 'index') -> name('admin.food-combo.index');
         Route::post('admin/food-combo/create', 'store') -> name('admin.food-combo.create');
+        Route::get('admin/food-combo/{id}', 'show')->name('admin.food-combo.edit');
         Route::put('admin/food-combo/update', 'update') -> name('admin.food-combo.update');
         Route::delete('admin/food-combo/delete', 'delete') -> name('admin.food-combo.delete');
     });

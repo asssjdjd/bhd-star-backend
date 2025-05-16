@@ -38,6 +38,32 @@ class TheaterController extends Controller
         }
     }
 
+        public function show($id)
+    {
+        try {
+            $theater = Theater::find($id);
+
+            if ($theater) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Lấy thông tin rạp phim thành công',
+                    'theater' => $theater
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => 404,
+                'message' => 'Không tìm thấy rạp phim nào',
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Theater get info error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin rạp phim'
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -66,8 +92,10 @@ class TheaterController extends Controller
             $apikey = env('IMGBB_API_KEY');
             $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
 
-            $response = Http::asForm()->post($url, [
-                'image' => $imageData,
+            $response = Http::withOptions([
+                'verify' => env('CURL_CERT')
+            ])->asForm()->post($url, [
+                'image' => $imageData
             ]);
 
 
@@ -77,7 +105,7 @@ class TheaterController extends Controller
                 // Lưu link ảnh vào database
                 $data['image'] = $responseData['data']['display_url'];
                 $theater = Theater::create($data);
-    
+
                 return response() -> json([
                     'status' => 201,
                     'message' => 'Tạo rạp phim thành công',
@@ -125,7 +153,7 @@ class TheaterController extends Controller
                 'theater' => $theater
             ], 200);
 
-        
+
         } catch (\Exception $e){
             Log::error('Theater update error: ' . $e -> getMessage());
             return response() -> json([

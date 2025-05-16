@@ -22,12 +22,12 @@ class FilmController extends Controller
                     'films' => $films
                 ], 200);
             }
-    
+
             return response() -> json([
                 'status' => 404,
                 'message' => 'Không tìm thấy phim nào',
             ], 404);
-            
+
         } catch (\Exception $e){
             Log::error('Film get list error: ' . $e -> getMessage());
             return response() -> json([
@@ -37,6 +37,23 @@ class FilmController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $film = Film::findOrFail($id);
+            return response()->json([
+                'status' => 200,
+                'message' => 'Lấy thông tin phim thành công',
+                'film' => $film
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Film show error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin phim'
+            ], 500);
+        }
+    }
 
     public function store(Request $request)
     {
@@ -70,8 +87,10 @@ class FilmController extends Controller
             $apikey = env('IMGBB_API_KEY');
             $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
 
-            $response = Http::asForm()->post($url, [
-                'image' => $imageData,
+            $response = Http::withOptions([
+                'verify' => env('CURL_CERT')
+            ])->asForm()->post($url, [
+                'image' => $imageData
             ]);
 
 
@@ -81,7 +100,7 @@ class FilmController extends Controller
                 // Lưu link ảnh vào database
                 $data['images'] = $responseData['data']['display_url'];
                 $film = Film::create($data);
-    
+
                 return response() -> json([
                     'status' => 201,
                     'message' => 'Tạo phim thành công',
@@ -131,7 +150,7 @@ class FilmController extends Controller
                 'film' => $film
             ], 200);
 
-            
+
         } catch (\Exception $e){
             Log::error('Film update error: ' . $e -> getMessage());
             return response() -> json([
