@@ -15,48 +15,76 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(HomeController::class) -> group(function(){
-    Route::get('/', 'index') -> name('home');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
     // viet them vao day 
-    Route::get('/login', 'login') -> name('login');
+    Route::get('/login', 'login')->name('login');
 });
 
-Route::controller(AdminController::class) -> group(function(){
-    Route::get('/admin', 'index') -> name('admin_home');
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin', 'index')->name('admin_home');
 
     // Các route cho các trang quản lý
+
+    // category 
     Route::get('/admin/category', function () {
-        return view('Admin.admin_category');
+        return view('Admin.category.admin_category');
     })->name('admin_category');
 
     Route::get('/admin/create-category', function () {
-        return view('Admin.admin_create_category');
+        return view('Admin.category.admin_create_category');
     })->name('admin_create_category');
 
     // /admin/film/${id}
 
     Route::get('/admin/film', function () {
-        return view('Admin.admin_film'); // Tạo file admin_film.blade.php
+        return view('Admin.film.admin_film'); // Tạo file admin_film.blade.php
     })->name('admin_film');
 
     Route::get('admin/showtime/{id}', function () {
-        return view('Admin.admin_showtime'); // Tạo file admin_showtime.blade.php
+        return view('Admin.film.admin_showtime'); // Tạo file admin_showtime.blade.php
     })->name('admin_showtime'); // Tạo file admin_showtime.blade.php
 
-    Route::get('/admin/foodcombo', function () {
-        return view('Admin.admin_foodcombo'); // Tạo file admin_foodcombo.blade.php
+    Route::get('/admin/create-film', function () {
+        return view('Admin.film.admin_create_film'); // Tạo file admin_create_film.blade.php
+    })->name('admin_create_film');
+
+    Route::get('/admin/edit/{id}', function ($id) {
+        return view('Admin.film.admin_edit_film', compact('id')); // Tạo file admin_edit_film.blade.php
+    })->name('admin_edit_film');
+
+    // cacs route cua food
+    Route::get('admin/foodcombo', function () {
+        return view('Admin.FoodCombo.index');
     })->name('admin_foodcombo');
 
-    Route::get('/admin/promotion', function () {
-        return view('Admin.admin_promotion'); // Tạo file admin_promotion.blade.php
+    Route::get('admin/foodcombo/create', function () {
+        return view('Admin.FoodCombo.create');
+    })->name('admin_create_foodcombo');
+
+    Route::get('admin/foodcombo/{id}', function () {
+        return view('Admin.FoodCombo.edit');
+    })->name('admin_edit_foodcombo');
+
+    // Các route của promotion
+    Route::get('admin/promotion', function () {
+        return view('Admin.Promotion.index');
     })->name('admin_promotion');
+    Route::get('admin/promotion/create', function () {
+        return view('Admin.Promotion.create');
+    })->name('admin_create_promotion');
+    Route::get('admin/promotion/{id}', function () {
+        return view('Admin.Promotion.edit');
+    })->name('admin_edit_promotion');
 
-    Route::get('/admin/theater', function () {
-        return view('Admin.admin_theater'); // Tạo file admin_theater.blade.php
+    // Các route của theater
+    Route::get('admin/theater', function () {
+        return view('Admin.theater.index');
     })->name('admin_theater');
-
+    Route::get('admin/theater/create', function () {
+        return view('Admin.theater.create');
+    })->name('admin_create_theater');
+    Route::get('admin/theater/{id}', function () {
+        return view('Admin.theater.edit');
+    })->name('admin_edit_theater');
 });
-
-
-
-

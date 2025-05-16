@@ -37,6 +37,33 @@ class PromotionController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $promotion = Promotion::find($id);
+
+            if(!$promotion) {
+                return response() -> json([
+                    'status' => 404,
+                    'message' => 'Không tìm thấy khuyến mãi'
+                ], 404);
+            }
+
+            return response() -> json([
+                'status' => 200,
+                'message' => 'Lấy thông tin khuyến mãi thành công',
+                'promotion' => $promotion
+            ], 200);
+
+        } catch (\Exception $e){
+            Log::error('Promotion get error: ' . $e -> getMessage());
+            return response() -> json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin khuyến mãi'
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -65,8 +92,10 @@ class PromotionController extends Controller
             $apikey = env('IMGBB_API_KEY');
             $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
 
-            $response = Http::asForm()->post($url, [
-                'image' => $imageData,
+            $response = Http::withOptions([
+                'verify' => env('CURL_CERT')
+            ])->asForm()->post($url, [
+                'image' => $imageData
             ]);
 
 

@@ -38,10 +38,36 @@ class TheaterController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $theater = Theater::find($id);
+
+            if ($theater) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Lấy thông tin rạp phim thành công',
+                    'theater' => $theater
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => 404,
+                'message' => 'Không tìm thấy rạp phim nào',
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Theater get info error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin rạp phim'
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
-            $request -> validate([
+            $request->validate([
                 'name' => 'required|string',
                 'address' => 'required|string',
                 'phone' => 'required|string',
@@ -50,24 +76,26 @@ class TheaterController extends Controller
                 'image' => 'required|image|max:5120',
             ]);
 
-            if(!$request -> hasFile('image')){
-                return response() -> json([
+            if (!$request->hasFile('image')) {
+                return response()->json([
                     'status' => 400,
                     'message' => 'Vui lòng tải ảnh lên'
                 ], 400);
             }
 
-            $data = $request -> all();
+            $data = $request->all();
             $data['created_at'] = Carbon::now();
 
-            $image = $request -> file('image');
-            $imageData = base64_encode(file_get_contents($image -> getRealPath()));
+            $image = $request->file('image');
+            $imageData = base64_encode(file_get_contents($image->getRealPath()));
 
             $apikey = env('IMGBB_API_KEY');
             $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
 
-            $response = Http::asForm()->post($url, [
-                'image' => $imageData,
+            $response = Http::withOptions([
+                'verify' => env('CURL_CERT')
+            ])->asForm()->post($url, [
+                'image' => $imageData
             ]);
 
 
@@ -77,17 +105,16 @@ class TheaterController extends Controller
                 // Lưu link ảnh vào database
                 $data['image'] = $responseData['data']['display_url'];
                 $theater = Theater::create($data);
-    
-                return response() -> json([
+
+                return response()->json([
                     'status' => 201,
                     'message' => 'Tạo rạp phim thành công',
                     'theater' => $theater
                 ], 201);
             }
-
         } catch (\Exception $e) {
-            Log::error('Theater create error: ' . $e -> getMessage());
-            return response() -> json([
+            Log::error('Theater create error: ' . $e->getMessage());
+            return response()->json([
                 'status' => 500,
                 'message' => 'Không thể tạo rạp phim'
             ], 500);
@@ -96,8 +123,8 @@ class TheaterController extends Controller
 
     public function update(Request $request)
     {
-        try{
-            $request -> validate([
+        try {
+            $request->validate([
                 'id' => 'required',
                 'name' => 'required|string',
                 'address' => 'required|string',
@@ -106,29 +133,27 @@ class TheaterController extends Controller
                 'policy' => 'required|string',
             ]);
 
-            $data = $request -> except('id');
+            $data = $request->except('id');
 
-            $theater = Theater::find($request -> id);
+            $theater = Theater::find($request->id);
 
-            if(!$theater) {
-                return response() -> json([
+            if (!$theater) {
+                return response()->json([
                     'status' => 404,
                     'message' => 'Không tìm thấy rạp phim cần cập nhật'
                 ], 404);
             }
 
-            $theater -> update($data);
+            $theater->update($data);
 
-            return response() -> json([
+            return response()->json([
                 'status' => 200,
                 'message' => 'Cập nhật rạp phim thành công',
                 'theater' => $theater
             ], 200);
-
-        
-        } catch (\Exception $e){
-            Log::error('Theater update error: ' . $e -> getMessage());
-            return response() -> json([
+        } catch (\Exception $e) {
+            Log::error('Theater update error: ' . $e->getMessage());
+            return response()->json([
                 'status' => 500,
                 'message' => 'Không thể cập nhật rạp phim'
             ], 500);
@@ -137,33 +162,33 @@ class TheaterController extends Controller
 
     public function delete(Request $request)
     {
-        try{
-            $request -> validate([
+        try {
+            $request->validate([
                 'id' => 'required'
             ]);
 
-            $theater = Theater::find($request -> id);
+            $theater = Theater::find($request->id);
 
-            if(!$theater) {
-                return response() -> json([
+            if (!$theater) {
+                return response()->json([
                     'status' => 404,
                     'message' => 'Không tìm thấy rạp phim cần xóa'
                 ], 404);
             }
 
-            $theater -> delete();
+            $theater->delete();
 
-            return response() -> json([
+            return response()->json([
                 'status' => 200,
                 'message' => 'Xóa rạp phim thành công'
             ], 200);
-
-        } catch (\Exception $e){
-            Log::error('Theater delete error: ' . $e -> getMessage());
-            return response() -> json([
+        } catch (\Exception $e) {
+            Log::error('Theater delete error: ' . $e->getMessage());
+            return response()->json([
                 'status' => 500,
                 'message' => 'Không thể xóa rạp phim'
             ], 500);
         }
     }
+
 }

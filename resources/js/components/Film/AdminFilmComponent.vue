@@ -25,7 +25,7 @@
             <td>{{ film.duration }}</td>
             <td>{{ film.category_name || film.type || '' }}</td>
             <td>
-              <button class="btn btn-info me-2" @click="goToShowTime(film.id)">Xem chi tiết</button>
+              <button class="btn btn-info me-2" @click="goToShowtime(film.id)">Xem lịch chiếu</button>
               <button class="btn btn-primary me-2" @click="goToEdit(film.id)">Sửa</button>
               <button class="btn btn-danger" @click="confirmDelete(film.id)">Xóa</button>
             </td>
@@ -85,9 +85,9 @@ export default {
       window.location.href = '/admin/create-film';
     },
     goToEdit(id) {
-      window.location.href = `/admin/film/${id}`;
+      window.location.href = `/admin/edit/${id}`;
     },
-    goToShowTime(id) {
+    goToShowtime(id) {
       window.location.href = `/admin/showtime/${id}`;
     },
   },

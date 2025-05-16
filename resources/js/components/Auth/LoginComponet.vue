@@ -1,9 +1,5 @@
 <template>
   <div class="wrapper">
-    <!-- Banner -->
-    <div id="top-banner">
-       <img src="/asset/img/Ngang-02.jpg" alt="header" width="100%" height="125px" />
-    </div>
 
     <!-- Main Content -->
     <hr style="border: 1px solid #72be43; margin-left: 5%; margin-right: 5%; margin-top: 0px;" />
@@ -21,7 +17,7 @@
 </template>
 
 <script>
-import LoginForm from './LoginForm.vue';
+import LoginForm from './LoginForm.vue'
 import RegisterForm from './RegisterForm.vue';
 
 export default {

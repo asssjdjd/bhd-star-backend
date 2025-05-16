@@ -3,6 +3,8 @@
 @section('title', 'Quản Lý Combo Đồ Ăn')
 
 @section('content')
-    <h1>Quản Lý Combo Đồ Ăn</h1>
-    <p>Đây là trang quản lý combo đồ ăn.</p>
+<div id="app">
+    <admin-foodcombo-component></admin-foodcombo-component>
+</div>
+@vite(['resources/js/app.js'])
 @endsection

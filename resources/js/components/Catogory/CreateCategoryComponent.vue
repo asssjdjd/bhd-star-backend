@@ -35,6 +35,7 @@ export default defineComponent({
                 const res = await categoryService.create({ type: this.type });
                 if (res.status === 201) {
                     alert(res.data.message); // Hiển thị thông báo thành công
+                    window.location.href = "/admin/category"; // Chuyển hướng về danh sách danh mục
                     this.type = ""; // Reset form
                 } else {
                     alert("Không thể thêm danh mục: " + res.data.message); // Hiển thị lỗi từ server

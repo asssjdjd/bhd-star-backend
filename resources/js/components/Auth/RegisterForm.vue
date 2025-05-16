@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import axios from '../axious/axious'; // Import Axios instance
+import axios from '../../axious/axious'; // Import Axios instance
 
 export default {
   name: 'RegisterForm',
