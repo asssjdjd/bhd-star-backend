@@ -7,9 +7,11 @@ use App\Http\Controllers\Api\Admin\PromotionController;
 use App\Http\Controllers\Api\Admin\ShowtimeController;
 use App\Http\Controllers\Api\Admin\TheaterController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\User\ComboController;
 use App\Http\Controllers\Api\User\FilmController as UserFilmController;
 use App\Http\Controllers\Api\User\HomeController;
 use App\Http\Controllers\Api\User\TicketController;
+use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -93,6 +95,11 @@ Route::prefix('/user') -> group(function () {
         Route::get('/step1/{id}', 'step1') -> name('user.ticket.step1');
         Route::post('/senday', 'senday') -> name('user.ticket.senday');
     });
+
+    Route::controller(ComboController::class) -> group(function(){
+        Route::post('/refresh-theater', 'refreshTheater') -> name('user.refresh-theater');
+        Route::get('/combo-detail/{id}', 'comboDetails') -> name('user.combo-detail');
+    });
 });
 
 Route::middleware('auth:sanctum')->group(function() {
@@ -105,6 +112,18 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::post('/step2', 'step2') -> name('user.ticket.step2');
             Route::post('/step3', 'step3') -> name('user.ticket.step3');
             Route::post('/step4', 'step4') -> name('user.ticket.step4');
+            Route::post('send-success-booking-email', 'sendSuccessBookingMail') -> name('send-success-booking-email');
+        });
+
+        Route::controller(UserController::class)->group(function(){
+            Route::post('/update', 'update') -> name('user.update');
+        });
+
+        Route::controller(ComboController::class) -> group(function(){
+            Route::get('/cart', 'cart') -> name('user.cart');
+            Route::post('/add-to-cart', 'addToCart') -> name('user.add-to-cart');
+            Route::post('/delete-item-cart', 'deleteItemCart') -> name('user.delete-item-cart');
+            Route::post('/update-cart', 'updateCart') -> name('user.update-cart');
         });
     });
 });
