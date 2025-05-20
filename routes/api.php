@@ -104,6 +104,7 @@ Route::middleware('auth:sanctum')->group(function() {
         Route::controller(TicketController::class)->group(function(){
             Route::post('/step2', 'step2') -> name('user.ticket.step2');
             Route::post('/step3', 'step3') -> name('user.ticket.step3');
+            Route::post('/step4', 'step4') -> name('user.ticket.step4');
         });
     });
 });

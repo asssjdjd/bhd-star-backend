@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SuccessBookingMail;
 use App\Models\Category;
 use App\Models\Film;
 use App\Models\Food_combo;
@@ -11,7 +12,9 @@ use App\Models\Showtime;
 use App\Models\Theater;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
 {
@@ -182,5 +185,101 @@ class TicketController extends Controller
                 'message' => 'Không thể lấy thông tin ghế'
             ], 500);
         }
+    }
+
+    public function step4(Request $request){
+        try{
+            $theater_id = $request->input('theaterId');
+            $showtime_id = $request->input('showtimeId');
+            $film_id = $request->input('filmId');
+            $selectedSeats = explode(',', $request->query('selectedSeats'));
+            $totalCost = $request->query('totalCost');
+            $combos = $request->query('combo', []);
+
+            $film_name = Film::where('id', $film_id)->first()->name;
+            $theater_name = Theater::where('id', $theater_id)->first()->name;
+            $showtime = Showtime::where('id', $showtime_id)->first();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Lấy thông tin bước 4 thành công',
+                'selectedSeats' => $selectedSeats,
+                'totalCost' => $totalCost,
+                'showtimeId' => $showtime_id,
+                'theaterId' => $theater_id,
+                'filmId' => $film_id,
+                'film_name' => $film_name,
+                'theater_name' => $theater_name,
+                'showtime' => $showtime,
+                'combos' => $combos
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('TicketController step4 error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin bước 4'
+            ], 500);
+        }
+    }
+
+    public function sendSuccessBookingMail(Request $request){
+        try {
+            $theater_id = $request->input('theaterId');
+            $showtime_id = $request->input('showtimeId');
+            $film_id = $request->input('filmId');
+            $selectedSeats = $request->query('selectedSeats', []);
+            $totalCost = $request->query('totalCost');
+            $combos = $request->input('combos');
+
+            // Chuyển đổi mảng combo từ id => value sang name => value
+            $food_combos = [];
+            foreach ($combos as $id => $quantity) {
+                $name = Food_combo::where('id', $id)->first()->name;
+                $food_combos[] = [
+                    'name' => $name,
+                    'quantity' => $quantity
+                ];
+            }
+
+
+            $film_name = Film::where('id', $film_id)->first()->name;
+            $theater_name = Theater::where('id', $theater_id)->first()->name;
+            $theater_address = Theater::where('id', $theater_id)->first()->address;
+            $showtime = Showtime::where('id', $showtime_id)->first();
+
+            $details = [
+                'film_name' => $film_name,
+                'theater_name' => $theater_name,
+                'theater_address' => $theater_address,
+                'start_time' => $showtime -> start_time,
+                'selectedSeats' => $selectedSeats,
+                'totalCost' => $totalCost,
+                'combos' => $food_combos
+            ];
+
+
+            Mail::to(Auth::user() -> email)->send(new SuccessBookingMail($details));
+            $seat = Seat::where('theater_id', $theater_id)
+                         ->where('showtime_id', $showtime_id)
+                         ->get();
+
+            foreach($seat as $item){
+                if(in_array($item->row . $item->seat_number, $selectedSeats)){
+                    $item->status = "Sold";
+                    $item->save();
+                }
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gửi email xác nhận thành công'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('TicketController sendSuccessBookingMail error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể gửi email xác nhận'
+            ], 500);
+        }
+
     }
 }
