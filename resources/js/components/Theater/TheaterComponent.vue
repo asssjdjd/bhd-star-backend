@@ -27,7 +27,7 @@
                 <tr v-for="theater in theaters" :key="theater.id">
                     <th scope="row">{{ theater.id }}</th>
                     <td>{{ theater.name }}</td>
-                    <td style="font-size: 13px">{{ theater.address }}</td>
+                    <td style="font-size: 13px; max-width: 400px;">{{ theater.address }}</td>
                     <td>{{ theater.phone }}</td>
                     <td>{{ theater.email }}</td>
                     <td>

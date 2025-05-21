@@ -198,6 +198,7 @@ export default {
 
                 const res = await FilmService.update(formData);
                 alert(res.data.message || "Cập nhật phim thành công!");
+                window.location.href = '/admin/film';
             } catch (err) {
                 alert("Có lỗi xảy ra khi cập nhật phim!");
                 console.error(err.response ? err.response.data : err);

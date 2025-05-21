@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\User\HomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\User\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,5 +92,26 @@ Route::prefix('/user') -> group(function () {
         Route::get('/theater-system', 'getTheaterSystem') -> name('user.get-theater-system');
         Route::get('/theater-schedule', 'getTheaterSchedule') -> name('user.get-theater-schedule');
         Route::get('/movie-schedule', 'getMovieSchedule') -> name('user.get-movie-schedule');
+    });
+
+
+    Route::controller(TicketController::class) -> group(function(){
+        Route::get('/step1/{id}', 'step1') -> name('user.ticket.step1');
+        Route::post('/senday', 'senday') -> name('user.ticket.senday');
+    });
+});
+
+
+Route::middleware('auth:sanctum')->group(function() {
+    // Logout route
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // User authenticated routes
+    Route::prefix('/user')->group(function() {
+        Route::controller(TicketController::class)->group(function(){
+            Route::post('/step2', 'step2') -> name('user.ticket.step2');
+            Route::post('/step3', 'step3') -> name('user.ticket.step3');
+            Route::post('/step4', 'step4') -> name('user.ticket.step4');
+        });
     });
 });

@@ -20,7 +20,9 @@ import CreateTheaterComponent from './components/Theater/CreateTheaterComponent.
 import EditTheaterComponent from './components/Theater/EditTheaterComponent.vue';
 import PromotionComponent from './components/Promotion/PromotionComponent.vue';
 import CreatePromotionComponent from './components/Promotion/CreatePromotionComponent.vue';
-import EditPromotionComponent from './components/Promotion/EditPromotionComponent.vue'
+import EditPromotionComponent from './components/Promotion/EditPromotionComponent.vue';
+import ShopComponent from './components/User/ShopComponent.vue';
+import Step1 from './components/Booking/Step1.vue';
 
 
 const app = createApp({});
@@ -46,4 +48,8 @@ app.component('admin-edit-theater-component', EditTheaterComponent)
 app.component('admin-promotion-component', PromotionComponent)
 app.component('admin-create-promotion-component', CreatePromotionComponent)
 app.component('admin-edit-promotion-component', EditPromotionComponent)
+
+app.component('step1-component',Step1)
+
+app.component('shop-component',ShopComponent)
 app.mount('#app');

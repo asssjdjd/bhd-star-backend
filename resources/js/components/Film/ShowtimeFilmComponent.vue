@@ -129,6 +129,10 @@ export default {
 
         this.showtimes = response.data.showtimes || [];
         this.filmName = response.data.film_name || '';
+
+        // console.log('Film Name:', this.filmName);
+        // // Lưu tên phim vào biến filmName
+        // console.log('Showtimes:', this.showtimes);
         this.loading = false;
       } catch (err) {
         console.error('Error fetching showtimes:', err);

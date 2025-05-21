@@ -30,7 +30,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" class="navbarDropdow" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            NOW SHOWING
+                            ĐANG KHỞI CHIẾU
                         </a>
                         
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -39,7 +39,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">ĐỒ ĂN/COMBO</a>
+                        <a class="nav-link" href="/shop">ĐỒ ĂN/COMBO</a>
                     </li>
 
                     <li class="nav-item">
@@ -64,7 +64,7 @@
 
                 <!-- form navbar register -->
                 <div class="d-flex" id="right-navbar">
-                    <a title="Đăng ký/Đăng nhập" href="#"
+                    <a title="Đăng ký/Đăng nhập" href="{{ route('login') }}"
                         class="text-decoration-none text-white p-2 rounded-3 fw-normal position-relative"
                         aria-expanded="false">
                         <span id="hover_nav" class="btn btn-md text-white p-2 rounded-3 fw-bold"

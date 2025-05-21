@@ -19,6 +19,16 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('home');
     // viet them vao day 
     Route::get('/login', 'login')->name('login');
+
+    Route::get('/shop', function () {
+        return view('User.shop');
+    })->name('shop');
+
+    Route::get('/step1/movie/{id}', function ($id) {
+        return view('User.Booking.step1', compact('id'));
+    })->name('step1');
+
+    
 });
 
 Route::controller(AdminController::class)->group(function () {

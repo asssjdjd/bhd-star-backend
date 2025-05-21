@@ -20,8 +20,10 @@ class HomeController extends Controller
         try{
             $today = Carbon::now()->format('Y-m-d');
             $futureDate = Carbon::now()->copy()->addDays(14)->format('Y-m-d');
+            $pastDate = Carbon::now()->copy()->subDays(30 * 3)->format('Y-m-d');
 
-            $films = Film::where('launch_date', '>=', $today)
+
+            $films = Film::where('launch_date', '>=', $pastDate)
                          ->where('launch_date', '<=', $futureDate)
                          ->orderByDesc('id')
                          ->limit(20)
@@ -35,6 +37,12 @@ class HomeController extends Controller
             foreach(Film::all() as $film){
                 if ($film->launch_date > $futureDate) {
                     $commingSoon[] = $film;
+                }
+            }
+
+            if($commingSoon){
+                foreach($commingSoon as $film){
+                    $film->type_name = Category::find($film->type)->type;
                 }
             }
 
