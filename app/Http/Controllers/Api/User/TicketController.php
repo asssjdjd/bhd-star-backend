@@ -226,8 +226,8 @@ class TicketController extends Controller
             $theater_id = $request->input('theaterId');
             $showtime_id = $request->input('showtimeId');
             $film_id = $request->input('filmId');
-            $selectedSeats = $request->query('selectedSeats', []);
-            $totalCost = $request->query('totalCost');
+            $selectedSeats = $request->input('selectedSeats', []);
+            $totalCost = $request->input('totalCost');
             $combos = $request->input('combos');
 
             // Chuyển đổi mảng combo từ id => value sang name => value
@@ -259,8 +259,8 @@ class TicketController extends Controller
 
             Mail::to(Auth::user() -> email)->send(new SuccessBookingMail($details));
             $seat = Seat::where('theater_id', $theater_id)
-                         ->where('showtime_id', $showtime_id)
-                         ->get();
+                        ->where('showtime_id', $showtime_id)
+                        ->get();
 
             foreach($seat as $item){
                 if(in_array($item->row . $item->seat_number, $selectedSeats)){
@@ -268,7 +268,6 @@ class TicketController extends Controller
                     $item->save();
                 }
             }
-
             return response()->json([
                 'status' => 200,
                 'message' => 'Gửi email xác nhận thành công'
