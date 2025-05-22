@@ -24,6 +24,35 @@ Route::controller(HomeController::class)->group(function () {
         return view('User.shop');
     })->name('shop');
 
+    Route::get('/page/{id}', function ($id) {
+        return view('User.Film.page', ['id' => $id]);
+    })->name('page');
+
+    Route::get('/promotion', function () {
+        return view('User.promotion');
+    })->name('promotion');
+
+    Route::get('/movie-schedule', function () {
+        return view('User.movie-schedule');
+    })->name('movie_schedule');
+
+    Route::get('/theater-schedule', function () {
+        return view('User.theater-schedule');
+    })->name('theater_schedule');
+
+    Route::get('/movie-schedule-detail/{id}', function ($id) {
+        return view('User.theater-schedule-detail', ['id' => $id]);
+    })->name('movie_schedule_detail');
+
+    Route::get('/theater-system', function () {
+        return view('User.theater-system');
+    })->name('theater_system');
+
+    Route::get('/theater/{id}', function ($id) {
+        return view('User.theater-detail', ['id' => $id]);
+    })->name('theater_detail');
+
+
     Route::get('/step1/{id}', function ($id) {
         return view('User.Booking.step1', ['id' => $id]);
     })->name('step1');

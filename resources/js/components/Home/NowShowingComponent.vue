@@ -31,7 +31,7 @@
                                     style="background-color:#72be43; font-size: 12px">2D</span>
                             </div>
                             <h4>
-                                <a :href="'detail' + film.id" class="fw-bold"
+                                <a :href="'page/' + film.id" class="fw-bold"
                                     style="text-decoration: none; color:#72be43; font-size: 20px;" :title="film.name">
                                     {{ limitText(film.name, 20) }}
                                 </a>
@@ -44,7 +44,7 @@
                             </div>
                         </li>
                     </ul>
-                    
+
                     <div class="swiper-pagination"></div>
 
                     <!-- If we need navigation buttons -->
@@ -79,11 +79,11 @@ export default {
         async fetchFilms() {
             try {
                 this.loading = true;
-                const response = await homeService.getNowShowingFilms();
+                const response = await homeService.getFilms();
                 console.log('Dữ liệu phim:', response);
-                this.films = response.films || [];
+                this.films = response.data.films || [];
                 this.loading = false;
-                
+
                 // Khởi tạo Swiper sau khi dữ liệu đã được tải
                 this.$nextTick(() => {
                     this.initSwiper();
@@ -93,13 +93,13 @@ export default {
                 this.loading = false;
             }
         },
-        
+
         initSwiper() {
             // Hủy Swiper cũ nếu đã tồn tại
             if (this.swiper) {
                 this.swiper.destroy();
             }
-            
+
             // Khởi tạo Swiper mới
             this.swiper = new Swiper('.cart-wrapper', {
                 modules: [Navigation, Pagination, Scrollbar],
@@ -136,11 +136,11 @@ export default {
                 },
             });
         },
-        
+
         getAgeLimit(film) {
             return film.age_limit || 'T18';
         },
-        
+
         limitText(text, maxLength) {
             if (text && text.length > maxLength) {
                 return text.substring(0, maxLength) + '...';

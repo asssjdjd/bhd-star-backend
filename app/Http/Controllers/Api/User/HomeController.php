@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Film;
 use App\Models\Food_combo;
+use App\Models\Promotion;
 use App\Models\Showtime;
 use App\Models\Theater;
 use Carbon\Carbon;
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
-    // lay tat ca danh sach phim 
     public function index()
     {
         try{
@@ -46,7 +46,7 @@ class HomeController extends Controller
                 }
             }
 
-            if($films){
+            if($films || $commingSoon){
                 return response()->json([
                     'status' => 200,
                     'message' => 'Lấy danh sách phim thành công',
@@ -68,7 +68,32 @@ class HomeController extends Controller
         }
     }
 
-    // lay tat ca danh sach rap
+    public function getPromotion(){
+        try{
+            $promotions = Promotion::orderByDesc('id')
+                                -> paginate(10);
+
+            if($promotions){
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Lấy danh sách khuyến mãi thành công',
+                    'promotions' => $promotions
+                ], 200);
+            }
+
+            return response()->json([
+                'status' => 404,
+                'message' => 'Không tìm thấy khuyến mãi nào',
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('HomeController get list error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy danh sách khuyến mãi'
+            ], 500);
+        }
+    }
+
     public function getTheaterSystem(){
         try{
             $theaters = Theater::orderByDesc('id')
@@ -95,7 +120,6 @@ class HomeController extends Controller
         }
     }
 
-    // lay tat ca danh sach rap va food combo
     public function getShop(){
         try {
             $theaters = Theater::select('id', 'name', 'address')
@@ -128,8 +152,6 @@ class HomeController extends Controller
         }
     }
 
-
-    // lay tat ca danh sach rap va lich chieu và lịch chiếu hôm nay
     public function getTheaterSchedule(){
         try {
             $today = Carbon::now()->format('Y-m-d');
@@ -167,7 +189,34 @@ class HomeController extends Controller
             ], 500);
         }
     }
-    // lay tat ca danh lịch chiếu phim
+
+    public function getTheaterDetail($id){
+        try {
+            $theaters = Theater::all();
+            $theater = null;
+
+            foreach($theaters as $item){
+                if($id == $item -> id){
+                    $theater = $item;
+                    break;
+                }
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Lấy thông tin rạp thành công',
+                'theater' => $theater,
+                'theaters' => $theaters
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('HomeController get list error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin về rạp'
+            ], 500);
+        }
+    }
+
     public function getMovieSchedule(){
         try {
             $today = Carbon::now()->format('Y-m-d');
@@ -190,7 +239,7 @@ class HomeController extends Controller
                 }
             }
 
-            if($films &&$commingSoon ){
+            if($films || $commingSoon ){
                 return response()->json([
                     'status' => 200,
                     'message' => 'Lấy lịch chiếu phim thành công',
@@ -204,6 +253,40 @@ class HomeController extends Controller
                 'message' => 'Không tìm thấy lịch chiếu nào',
             ], 404);
 
+        } catch (\Exception $e) {
+            Log::error('HomeController get list error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin về lịch chiếu'
+            ], 500);
+        }
+    }
+
+    public function getTheaterScheduleDetail($id){
+        try {
+            $theater = Theater::find($id);
+            $today = Carbon::now()->format('Y-m-d');
+            $showtimes = Showtime::where('theater_id', $id)
+                                ->whereDate('start_time', $today)
+                                ->orderBy('start_time')
+                                ->get();
+
+            $films = [];
+            foreach($showtimes as $showtime){
+                $film = Film::find($showtime->film_id);
+                if(in_array($film, $films)){
+                    continue;
+                }
+                $films[] = $film;
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Lấy lịch chiếu rạp thành công',
+                'theater' => $theater,
+                'films' => $films,
+                'showtimes' => $showtimes
+            ]);
         } catch (\Exception $e) {
             Log::error('HomeController get list error: ' . $e->getMessage());
             return response()->json([

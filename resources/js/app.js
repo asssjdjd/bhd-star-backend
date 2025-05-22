@@ -11,6 +11,12 @@ import AdminFilmComponent from './components/Film/AdminFilmComponent.vue';
 import ShowtimeFilmComponent from './components/Film/ShowtimeFilmComponent.vue'
 import CreateFilmComponent from './components/Film/CreateFilmComponent.vue';
 import EditFilmComponent from './components/Film/EditFilmComponent.vue';
+import TheaterSystemComponent from './components/TheaterSystemComponent.vue';
+import TheaterDetailComponent from './components/TheaterDetailComponent.vue';
+import UserPromotionComponent from './components/UserPromotionComponent.vue';
+import MovieScheduleComponent from './components/MovieScheduleComponent.vue';
+import TheaterScheduleComponent from './components/TheaterScheduleComponent.vue';
+import TheaterScheduleDetailComponent from './components/TheaterScheduleDetailComponent.vue';
 
 import FoodComboComponent from './components/FoodCombo/FoodComboComponent.vue';
 import CreateFoodComboComponent from './components/FoodCombo/CreateFoodComboComponent.vue';
@@ -27,6 +33,7 @@ import Step1Component from './components/Booking/Step1Component.vue';
 import Step2Component from './components/Booking/Step2Component.vue';
 import Step3Component from './components/Booking/Step3Component.vue';
 import Step4Component from './components/Booking/Step4Component.vue';
+import PageComponent from './components/PageComponent.vue'; 
 
 
 const app = createApp({});
@@ -40,6 +47,12 @@ app.component('admin-showtime-component',ShowtimeFilmComponent)
 app.component('admin-film-component',AdminFilmComponent)
 app.component('create-film-component',CreateFilmComponent)
 app.component('edit-film-component',EditFilmComponent)
+app.component('theater-component', TheaterSystemComponent);
+app.component('theater-detail-component', TheaterDetailComponent);
+app.component('promotion-component', UserPromotionComponent);
+app.component('movie-schedule-component', MovieScheduleComponent);
+app.component('theater-schedule-component', TheaterScheduleComponent);
+app.component('theater-schedule-detail-component', TheaterScheduleDetailComponent);
 
 app.component('admin-foodcombo-component', FoodComboComponent)
 app.component('admin-create-foodcombo-component', CreateFoodComboComponent)
@@ -57,6 +70,7 @@ app.component('step1-component', Step1Component)
 app.component('step2-component', Step2Component)
 app.component('step3-component', Step3Component)
 app.component('step4-component', Step4Component)
+app.component('page-component', PageComponent)
 
 
 app.component('shop-component',ShopComponent)
