@@ -94,6 +94,46 @@ class TicketController extends Controller
         }
     }
 
+    public function sendayTheater(Request $request)
+    {
+        try {
+            $date = $request->input('date');
+            $theaterId = $request->input('theater_id');
+            $today = Carbon::now()->toDateString();
+
+            // Kiểm tra nếu ngày được gửi lên là trước ngày hôm nay
+            if (Carbon::parse($date)->lt(Carbon::parse($today))) {
+                return response()->json([
+                    'showtime' => [],
+                    'films' => [],
+                    'theaterName' => ''
+                ]);
+            }
+
+            // Nếu ngày được gửi lên là sau ngày hôm nay, thực hiện truy vấn
+            $films = [];
+            $showtime = Showtime::where('theater_id', $theaterId)->whereDate('start_time', $date)->get();
+            foreach($showtime as $item){
+                $tmp = Film::where('id', $item->film_id)->first();
+                if(!in_array($tmp, $films)){
+                    $films[] = $tmp;
+                }
+            }
+            return response()->json([
+                'showtime' => $showtime,
+                'films' => $films,
+                'theaterName' => Theater::where('id', $theaterId)->first()->name
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('TicketController senday error: ' . $e->getMessage());
+            return response()->json([
+                'status' => 500,
+                'message' => 'Không thể lấy thông tin cho bước 2'
+            ], 500);
+        }
+    }
+
     public function step2(Request $request)
     {
         try{

@@ -85,8 +85,11 @@ Route::prefix('/user') -> group(function () {
         Route::get('/index', 'index') -> name('user.index');
         Route::get('/shop', 'getShop') -> name('user.getShop');
         Route::get('/theater-system', 'getTheaterSystem') -> name('user.get-theater-system');
+        Route::get('/theater/{id}', 'getTheaterDetail') -> name('user.get-theater-detail');
+        Route::get('/promotion', 'getPromotion') -> name('user.get-promotion');
         Route::get('/theater-schedule', 'getTheaterSchedule') -> name('user.get-theater-schedule');
         Route::get('/movie-schedule', 'getMovieSchedule') -> name('user.get-movie-schedule');
+        Route::get('/theater-schedule-detail/{id}', 'getTheaterScheduleDetail') -> name('user.get-theater-schedule-detail');
     });
     Route::controller(UserFilmController::class) -> group(function(){
         Route::get('/film/{id}', 'getFilm') -> name('user.getFilm');
@@ -94,6 +97,7 @@ Route::prefix('/user') -> group(function () {
     Route::controller(TicketController::class) -> group(function(){
         Route::get('/step1/{id}', 'step1') -> name('user.ticket.step1');
         Route::post('/senday', 'senday') -> name('user.ticket.senday');
+        Route::post('/senday-theater', 'sendayTheater') -> name('user.ticket.senday-theater');
     });
 
     Route::controller(ComboController::class) -> group(function(){
