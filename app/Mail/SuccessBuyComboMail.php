@@ -3,17 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SuccessBookingMail extends Mailable
+class SuccessBuyComboMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     public $details;
-
     /**
      * Create a new message instance.
      */
@@ -28,7 +27,7 @@ class SuccessBookingMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mua vé thành công',
+            subject: 'Mua combo thành công',
         );
     }
 
@@ -38,7 +37,7 @@ class SuccessBookingMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'Mail.success_booking',
+            view: 'Mail.success_buy_combo',
             with: [
                 'details' => $this->details,
             ],

@@ -24,9 +24,21 @@ Route::controller(HomeController::class)->group(function () {
         return view('User.shop');
     })->name('shop');
 
-    Route::get('/step1/movie/{id}', function ($id) {
-        return view('User.Booking.step1', compact('id'));
+    Route::get('/step1/{id}', function ($id) {
+        return view('User.Booking.step1', ['id' => $id]);
     })->name('step1');
+
+    Route::get('/step2', function () {
+        return view('User.Booking.step2');
+    })->name('step2');
+
+    Route::get('/step3', function () {
+        return view('User.Booking.step3');
+    })->name('step3');
+
+    Route::get('/step4', function () {
+        return view('User.Booking.step4');
+    })->name('step4');
 
     
 });

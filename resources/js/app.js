@@ -22,7 +22,11 @@ import PromotionComponent from './components/Promotion/PromotionComponent.vue';
 import CreatePromotionComponent from './components/Promotion/CreatePromotionComponent.vue';
 import EditPromotionComponent from './components/Promotion/EditPromotionComponent.vue';
 import ShopComponent from './components/User/ShopComponent.vue';
-import Step1 from './components/Booking/Step1.vue';
+
+import Step1Component from './components/Booking/Step1Component.vue';
+import Step2Component from './components/Booking/Step2Component.vue';
+import Step3Component from './components/Booking/Step3Component.vue';
+import Step4Component from './components/Booking/Step4Component.vue';
 
 
 const app = createApp({});
@@ -49,7 +53,11 @@ app.component('admin-promotion-component', PromotionComponent)
 app.component('admin-create-promotion-component', CreatePromotionComponent)
 app.component('admin-edit-promotion-component', EditPromotionComponent)
 
-app.component('step1-component',Step1)
+app.component('step1-component', Step1Component)
+app.component('step2-component', Step2Component)
+app.component('step3-component', Step3Component)
+app.component('step4-component', Step4Component)
+
 
 app.component('shop-component',ShopComponent)
 app.mount('#app');

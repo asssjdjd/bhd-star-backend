@@ -14,7 +14,7 @@
                     <ul class="card-list swiper-wrapper" style="list-style: none;">
                         <li v-for="film in films" :key="film.id" class="card-item swiper-slide">
                             <img :src="film.images" :alt="film.name" style="border-radius: 10px;">
-                            <a :href="'step1/movie/' + film.id"
+                            <a :href="'step1/' + film.id"
                                 class="buy_now d-inline-flex justify-content-center  align-items-center text-white"
                                 style="display:none; background-color:#72be43; border: 1px solid #72be43; border-radius:10px; z-index: 1; text-decoration: none; width:150px; height: 50px; visibility: hidden;">
                                 Mua vé ngay</a>

@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ asset('asset/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/datve.css') }}">
     <link rel="icon" href="https://www.bhdstar.vn/wp-content/uploads/2023/08/logo.png" type="image/x-icon"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
