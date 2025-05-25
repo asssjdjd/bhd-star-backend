@@ -8,7 +8,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -52,7 +55,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
-        
+
         if (!$user) {
             return response()->json([
                 'data' => null,
@@ -94,5 +97,106 @@ class AuthController extends Controller
             'status' => 200,
             'message' => 'Đăng xuất thành công'
         ], 200);
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        try{
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Email không tồn tại',
+                    'status' => 404,
+                ], 404);
+            }
+
+            Session::forget(['otp', 'email']);
+
+            $otp = rand(100000, 999999);
+            Session::put('otp', $otp);
+            Session::put('email', $request->email);
+
+            // Send OTP email
+            Mail::raw("Mã OTP của bạn là: $otp", function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Mã OTP đặt lại mật khẩu');
+            });
+
+            return response()->json([
+                'message' => 'Mã OTP đã được gửi đến email của bạn',
+                'status' => 200,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Send reset link error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Lỗi khi gửi liên kết đặt lại mật khẩu',
+                'status' => 500,
+            ], 500);
+        }
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        try {
+            $request->validate([
+                'otp' => 'required|numeric',
+            ]);
+
+            $sessionOtp = Session::get('otp');
+            $email = Session::get('email');
+
+            if ($request->otp != $sessionOtp) {
+                return response()->json([
+                    'message' => 'Mã OTP không chính xác',
+                    'status' => 400,
+                ], 400);
+            }
+
+            return response()->json([
+                'message' => 'Mã OTP xác thực thành công',
+                'status' => 200,
+                'email' => $email,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Verify OTP error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Lỗi khi xác thực mã OTP',
+                'status' => 500,
+            ], 500);
+        }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            $user = User::where('email', Session::get('email'))->first();
+
+            if (Hash::check($request->password, $user->password)) {
+                return back()->with('error', 'Mật khẩu mới không được trùng với mật khẩu cũ');
+            }
+
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            Session::forget(['otp', 'email']);
+
+            return response()->json([
+                'message' => 'Mật khẩu đã được đặt lại thành công',
+                'status' => 200,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Reset password error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Lỗi khi đặt lại mật khẩu',
+                'status' => 500,
+            ], 500);
+        }
     }
 }
