@@ -29,9 +29,11 @@ use Illuminate\Support\Facades\Route;
 /* Auth routes */
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password');
-Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp');
-Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+Route::middleware('web') -> group(function () {
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('forgot-password');
+    Route::post('/otp', [AuthController::class, 'verifyOtp'])->name('otp');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+});
 
 
 /* Admin routes */
@@ -86,7 +88,9 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
 Route::prefix('/user') -> group(function () {
     Route::controller(HomeController::class) -> group(function(){
         Route::get('/index', 'index') -> name('user.index');
-        Route::get('/shop', 'getShop') -> name('user.getShop');
+        Route::middleware('web') -> group(function(){
+            Route::get('/shop', 'getShop') -> name('user.getShop');
+        });
         Route::get('/theater-system', 'getTheaterSystem') -> name('user.get-theater-system');
         Route::get('/theater/{id}', 'getTheaterDetail') -> name('user.get-theater-detail');
         Route::get('/promotion', 'getPromotion') -> name('user.get-promotion');
@@ -103,9 +107,11 @@ Route::prefix('/user') -> group(function () {
         Route::post('/senday-theater', 'sendayTheater') -> name('user.ticket.senday-theater');
     });
 
-    Route::controller(ComboController::class) -> group(function(){
-        Route::post('/refresh-theater', 'refreshTheater') -> name('user.refresh-theater');
-        Route::get('/combo-detail/{id}', 'comboDetails') -> name('user.combo-detail');
+    Route::middleware('web') -> group(function(){
+        Route::controller(ComboController::class) -> group(function(){
+            Route::post('/refresh-theater', 'refreshTheater') -> name('user.refresh-theater');
+            Route::get('/combo-detail/{id}', 'comboDetails') -> name('user.combo-detail');
+        });
     });
 });
 
@@ -116,7 +122,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // User authenticated routes
     Route::prefix('/user')->group(function() {
         Route::controller(TicketController::class)->group(function(){
-            Route::post('/step2', 'step2') -> name('user.ticket.step2');
+            Route::post('/step2', 'step2') -> name('user.ticket.step');
             Route::post('/step3', 'step3') -> name('user.ticket.step3');
             Route::post('/step4', 'step4') -> name('user.ticket.step4');
             Route::post('send-success-booking-email', 'sendSuccessBookingMail') -> name('send-success-booking-email');
@@ -126,11 +132,15 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::post('/update', 'update') -> name('user.update');
         });
 
-        Route::controller(ComboController::class) -> group(function(){
-            Route::get('/cart', 'cart') -> name('user.cart');
-            Route::post('/add-to-cart', 'addToCart') -> name('user.add-to-cart');
-            Route::post('/delete-item-cart', 'deleteItemCart') -> name('user.delete-item-cart');
-            Route::post('/update-cart', 'updateCart') -> name('user.update-cart');
+        Route::middleware('web') -> group(function(){
+            Route::controller(ComboController::class) -> group(function(){
+                Route::get('/cart', 'cart') -> name('user.cart');
+                Route::post('/add-to-cart', 'addToCart') -> name('user.add-to-cart');
+                Route::post('/delete-item-cart', 'deleteItemCart') -> name('user.delete-item-cart');
+                Route::post('/update-cart', 'updateCart') -> name('user.update-cart');
+                Route::post('/success-buy-combo', 'successBuyCombo') -> name('user.success-buy-combo');
+            });
         });
+
     });
 });

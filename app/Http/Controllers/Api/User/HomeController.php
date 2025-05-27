@@ -130,13 +130,15 @@ class HomeController extends Controller
             session()->put('theater_id', $theater_id);
             $foods = Food_combo::where('theater_id', $theater_id)
                                 ->get();
-
+            $cartCount = session()->get('cart', []) ?? 0;
             if($theaters && $foods){
                 return response()->json([
                     'status' => 200,
                     'message' => 'Lấy danh sách rạp và combo thành công',
                     'theaters' => $theaters,
-                    'foods' => $foods
+                    'foods' => $foods,
+                    'theater_id' => session() -> get('theater_id'),
+                    'cart_count' => count($cartCount)
                 ], 200);
             }
             return response()->json([
