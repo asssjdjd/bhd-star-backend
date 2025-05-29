@@ -138,3 +138,31 @@ new Swiper(".cart-wrapper4", {
     },
   },
 });
+
+new Swiper('.cart-wrapper-about-us', {
+    // Optional parameters
+    loop: true,
+    // If we need pagination
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+      dynamicBullets : true,
+    },
+
+    // Navigation arrows
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+
+    scrollbar: {
+        el: '.swiper-scrollbar',
+    },
+
+    breakpoints: {
+        0: {
+            slidesPerView: 1,
+        },
+    },
+});
+

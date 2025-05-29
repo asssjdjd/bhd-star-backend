@@ -3,7 +3,7 @@
     <a href="{{ route('home')}}">
         <img src="{{asset('asset/img/Ngang-02.jpg')}}" alt="header" width="100%" height="125px">
     </a>
-    
+
 </div>
 <!-- navbar -->
 <div id="navbar-header" class="sticky-top">
@@ -30,20 +30,20 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" class="navbarDropdow" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            NOW SHOWING
+                            ĐANG KHỞI CHIẾU
                         </a>
-                        
+
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item " href="#">LỊCH CHIẾU PHIM</a></li>
-                            <li><a class="dropdown-item" href="#">LỊCH CHIẾU RẠP</a></li>
+                            <li><a class="dropdown-item " href="{{ route('movie_schedule') }}">LỊCH CHIẾU PHIM</a></li>
+                            <li><a class="dropdown-item" href="{{ route('theater_schedule') }}">LỊCH CHIẾU RẠP</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">ĐỒ ĂN/COMBO</a>
+                        <a class="nav-link" href="{{ route('shop') }}">ĐỒ ĂN/COMBO</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">KHUYẾN MÃI</a>
+                        <a class="nav-link" href="{{ route('promotion') }}">KHUYẾN MÃI</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">DỊCH VỤ</a>
@@ -54,7 +54,7 @@
                             VỀ BHD STAR
                         </a>
                         <ul class="dropdown-menu fw-bold fs-8" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">HỆ THỐNG RẠP</a></li>
+                            <li><a class="dropdown-item" href="{{ route('theater_system') }}">HỆ THỐNG RẠP</a></li>
                             <li><a class="dropdown-item" href="#">VỀ CHÚNG TÔI</a></li>
                             <li><a class="dropdown-item" href="#">TUYỂN DỤNG</a></li>
                         </ul>
@@ -63,42 +63,28 @@
                 </ul>
 
                 <!-- form navbar register -->
-                <div class="d-flex" id="right-navbar">
-                    <a title="Đăng ký/Đăng nhập" href="#"
+                <li class="d-flex" id="right-navbar">
+                    <a title="Đăng ký/Đăng nhập" href="{{ route('login')}}"
                         class="text-decoration-none text-white p-2 rounded-3 fw-normal position-relative"
                         aria-expanded="false">
                         <span id="hover_nav" class="btn btn-md text-white p-2 rounded-3 fw-bold"
                             style="border: 1px solid #e3f2c0; background-color: #72be43;">
                             Đăng nhập/Đăng ký
                         </span>
-                        {{-- <div id="nav_dropdown" class="card position-absolute top-5 end-0 fw-bold "
-                            style="width: 320px; transform: translateX(20px); display : none; background-color: rgba(44, 44, 44, .29);">
-                            <div class="card-body d-flex flex-column justify-content-end pb-4"
-                                style="background-color: rgba(44, 44, 44, .29); font-size:14px;">
-                                <form id="loginForm" action="{{ route('login')}}" method="POST">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label for="emailInput" class="form-label">Email*</label>
-                                        <input name="email" type="email" class="form-control" id="emailInput"
-                                            placeholder="Email" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="passwordInput" class="form-label">Mật khẩu*</label>
-                                        <input name="password" type="password" class="form-control" id="passwordInput"
-                                            placeholder="Mật khẩu" required>
-                                    </div>
-                                    <div class="mb-2 d-flex justify-content-end p-2" id="button_forgotpassword">
-                                        forgot password
-                                    </div>
-
-                                    <button type="submit"
-                                        class="btn btn-md btn_1 btn-primary w-100 mb-2 border-0 fw-bold mb-3"
-                                        style="background-color: #72be43;"> Đăng nhập</button>
-                                </form>
-                            </div>
-                        </div> --}}
                     </a>
-                </div>
+                </li>
+
+                <li class="account-item has-icon nav-item list-unstyled" id="user-navbar" style="display:none;">
+                    <a href="/user-detail" class="account-link account-login text-decoration-none " title="Tài khoản">
+                        <i class="image-icon circle">
+                            <img width="40px" src="{{ asset('asset/img/no-user.jpg')}}">
+                        </i>
+                        <span class="header-account-title text-dark" id="user-name">
+                            <!-- Sẽ được JS cập nhật -->
+                        </span>
+                    </a>
+                    <a class="lougout-link text-decoration-none text-danger" href="#" id="logout-btn">Thoát</a>
+                </li>
             </div>
         </div>
     </nav>

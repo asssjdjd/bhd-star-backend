@@ -47,6 +47,7 @@ Route::middleware('auth:sanctum', 'auth.admin') -> group(function () {
 
     Route::controller(FilmController::class) -> group(function(){
         Route::get('admin/film/index', 'index') -> name('admin.film.index');
+        Route::get('admin/film/{id}', 'show')->name('admin.film.edit');
         Route::post('admin/film/create', 'store') -> name('admin.film.create');
         Route::put('admin/film/update', 'update') -> name('admin.film.update');
         Route::delete('admin/film/delete', 'delete') -> name('admin.film.delete');

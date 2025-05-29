@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Food_combo;
+use App\Models\Theater;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +17,9 @@ class FoodComboController extends Controller
         try {
             $foods = Food_combo::orderBy('id', 'asc')->get();
 
+            foreach($foods as $food) {
+                $food->theater_name = Theater::where('id', $food->theater_id)->value('name');
+            }
             if ($foods) {
                 return response()->json([
                     'status' => 200,
@@ -72,7 +76,6 @@ class FoodComboController extends Controller
                 'price' => 'required|integer',
                 'description' => 'required|string',
                 'theater_id' => 'required|integer',
-                'theater_name' => 'required|string'
             ]);
 
             if (!$request->hasFile('image')) {
@@ -128,7 +131,6 @@ class FoodComboController extends Controller
                 'price' => 'required|integer',
                 'description' => 'required|string',
                 'theater_id' => 'required|integer',
-                'theater_name' => 'required|string'
             ]);
 
            $data = $request->except('id');

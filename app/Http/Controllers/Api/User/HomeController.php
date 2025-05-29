@@ -223,8 +223,9 @@ class HomeController extends Controller
         try {
             $today = Carbon::now()->format('Y-m-d');
             $futureDate = Carbon::now()->copy()->addDays(14)->format('Y-m-d');
+            $lastDate = Carbon::now()->copy()->subDays(30)->format('Y-m-d');
 
-            $films = Film::where('launch_date', '>=', $today)
+            $films = Film::where('launch_date', '>=', $lastDate)
                         ->where('launch_date', '<=', $futureDate)
                         ->orderByDesc('id')
                         ->limit(15)

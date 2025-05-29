@@ -23,8 +23,13 @@ class TicketController extends Controller
         try{
             $film = Film::where('id', $id) -> first();
             $film -> category_name = Category::find($film->type)->type;
-            $today = Carbon::now() -> toDateString();
-            $showtimes = Showtime::where('film_id', $id) -> whereDate('start_time', $today) -> get();
+            $today = Carbon::now()->toDateString();
+            $fifteenMinutesAgo = Carbon::now()->subMinutes(15);
+            $showtimes = Showtime::where('film_id', $id)
+                ->whereDate('start_time', $today)
+                ->where('start_time', '>', $fifteenMinutesAgo)
+                ->orderBy('start_time', 'asc')
+                ->get();
             $theaters = [];
             if($showtimes -> isEmpty())
             {
@@ -58,31 +63,59 @@ class TicketController extends Controller
     public function senday(Request $request)
     {
         try {
-            $date = $request->input('date');
+            $dateInput = $request->input('date'); // Ngày người dùng chọn
             $filmId = $request->input('film_id');
-            $today = Carbon::now()->toDateString();
 
-            // Kiểm tra nếu ngày được gửi lên là trước ngày hôm nay
-            if (Carbon::parse($date)->lt(Carbon::parse($today))) {
+            // Validate đầu vào cơ bản
+            if (!$dateInput || !$filmId) {
                 return response()->json([
-                    'showtime' => [],
-                    'theater' => []
+                    'status' => 400,
+                    'message' => 'Thiếu thông tin ngày hoặc ID phim.'
+                ], 400);
+            }
+
+            $parsedDate = Carbon::parse($dateInput)->startOfDay(); // Chuẩn hóa ngày người dùng chọn về đầu ngày
+            $today = Carbon::now()->startOfDay(); // Ngày hôm nay, đầu ngày (đã theo múi giờ config)
+
+            // 1. Kiểm tra nếu ngày được gửi lên là một ngày trong quá khứ
+            if ($parsedDate->lt($today)) {
+                return response()->json([
+                    'showtimes' => [],
+                    'theaters' => []
                 ]);
             }
 
-            // Nếu ngày được gửi lên là sau ngày hôm nay, thực hiện truy vấn
-            $showtime = Showtime::where('film_id', $filmId)->whereDate('start_time', $date)->get();
-            $theater = [];
-            foreach($showtime as $item){
-                $tmp = Theater::where('id', $item->theater_id)->first();
-                if(!in_array($tmp, $theater)){
-                    $theater[] = $tmp;
+            // 2. Lấy tất cả các suất chiếu của phim trong ngày được chọn
+            $allShowtimesForDate = Showtime::where('film_id', $filmId)
+                                        ->whereDate('start_time', $parsedDate->toDateString())
+                                        ->orderBy('start_time', 'asc')
+                                        ->get();
+
+            $showtimes = $allShowtimesForDate; // Gán giá trị ban đầu
+
+            // 3. Nếu ngày được chọn là ngày hôm nay, lọc lại danh sách $showtimes
+            if ($parsedDate->isSameDay($today)) {
+                $fifteenMinutesAgo = Carbon::now()->subMinutes(15); // Thời điểm hiện tại - 15 phút
+
+                // Lọc collection: chỉ giữ lại những suất chiếu có start_time > $fifteenMinutesAgo
+                $showtimes = $allShowtimesForDate->filter(function ($showtime) use ($fifteenMinutesAgo) {
+                    return Carbon::parse($showtime->start_time)->gt($fifteenMinutesAgo);
+                })->values(); // ->values() để reset keys của collection sau khi filter
+            }
+            // Nếu là ngày trong tương lai, $showtimes sẽ giữ nguyên giá trị của $allShowtimesForDate
+
+            $theaters = [];
+            if (!$showtimes->isEmpty()) {
+                // Lấy danh sách các theater_id duy nhất từ các showtimes đã lọc (hoặc chưa lọc)
+                $theaterIds = $showtimes->pluck('theater_id')->unique()->filter()->values();
+                if ($theaterIds->isNotEmpty()) {
+                    $theaters = Theater::whereIn('id', $theaterIds)->get();
                 }
             }
 
             return response()->json([
-                'showtime' => $showtime,
-                'theater' => $theater
+                'showtimes' => $showtimes,
+                'theaters' => $theaters
             ]);
 
         } catch (\Exception $e) {

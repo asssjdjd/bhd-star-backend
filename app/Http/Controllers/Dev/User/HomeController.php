@@ -11,4 +11,9 @@ class HomeController extends Controller
    {
       return view('User.home');
    }
+
+   public function login()
+   {
+      return view('User.Auth.login');
+   }
 }
