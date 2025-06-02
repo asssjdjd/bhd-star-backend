@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PromotionController extends Controller
 {
@@ -84,34 +85,26 @@ class PromotionController extends Controller
                 ], 400);
             }
 
-            $image = $request->file('image');
-
-            $data = $request -> all();
-            $data['created_at'] = Carbon::now();
-            $imageData = base64_encode(file_get_contents($image -> getRealPath()));
-
-            $apikey = env('IMGBB_API_KEY');
-            $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
-
-            $response = Http::withOptions([
-                'verify' => env('CURL_CERT')
-            ])->asForm()->post($url, [
-                'image' => $imageData
+            $uploadedFile = $request->file('image');
+            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+                'folder' => 'promotions',
             ]);
 
-
-
-            $responseData = $response->json();
-            if (isset($responseData['data']['display_url'])) {
-                // Lưu link ảnh vào database
-                $data['image'] = $responseData['data']['display_url'];
+            if ($uploadResult && $uploadResult->getSecurePath()) {
+                $data = $request->except('image');
+                $data['image'] = $uploadResult->getSecurePath();
                 $promotion = Promotion::create($data);
 
-                return response() -> json([
+                return response()->json([
                     'status' => 201,
-                    'message' => 'Tạo khuyến mại thành công',
+                    'message' => 'Tạo khuyến mãi thành công',
                     'promotion' => $promotion
                 ], 201);
+            } else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Không thể tải ảnh lên'
+                ], 500);
             }
 
         } catch (\Exception $e) {
@@ -178,6 +171,14 @@ class PromotionController extends Controller
                     'status' => 404,
                     'message' => 'Không tìm thấy khuyến mãi cần xóa'
                 ], 404);
+            }
+
+            if($promotion -> image) {
+                $url = $promotion -> image;
+                $parts = explode('/', parse_url($url, PHP_URL_PATH));
+                $filename = end($parts);
+                $publicId = 'promotions/' . pathinfo($filename, PATHINFO_FILENAME);
+                Cloudinary::destroy($publicId);
             }
 
             $promotion -> delete();

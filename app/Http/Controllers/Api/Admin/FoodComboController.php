@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class FoodComboController extends Controller
 {
@@ -85,25 +86,15 @@ class FoodComboController extends Controller
                 ], 400);
             }
 
-            $image = $request->file('image');
 
-            $data = $request->all();
-            $data['created_at'] = Carbon::now();
-            $imageData = base64_encode(file_get_contents($image -> getRealPath()));
-
-            $apikey = env('IMGBB_API_KEY');
-            $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
-
-            $response = Http::withOptions([
-                'verify' => env('CURL_CERT')
-            ])->asForm()->post($url, [
-                'image' => $imageData
+            $uploadedFile = $request->file('image');
+            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+                'folder' => 'food_combos'
             ]);
 
-            $responseData = $response->json();
-
-            if(isset($responseData['data']['url'])) {
-                $data['image'] = $responseData['data']['url'];
+            if ($uploadResult && $uploadResult->getSecurePath()) {
+                $data = $request->except('image');
+                $data['image'] = $uploadResult->getSecurePath();
                 $food = Food_combo::create($data);
 
                 return response()->json([
@@ -111,6 +102,11 @@ class FoodComboController extends Controller
                     'message' => 'Tạo combo thành công',
                     'food' => $food
                 ], 200);
+            } else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Không thể upload ảnh lên Cloudinary'
+                ], 500);
             }
         } catch (\Exception $e) {
             Log::error("FoodCombo create error: " . $e->getMessage());
@@ -173,6 +169,15 @@ class FoodComboController extends Controller
                     'status' => 404,
                     'message' => 'Không tìm thấy combo'
                 ], 404);
+            }
+
+            if ($food->image) {
+                $url = $food->image;
+                $parts = explode('/', parse_url($url, PHP_URL_PATH));
+                $filename = end($parts);
+                $publicId = 'food_combos/' . pathinfo($filename, PATHINFO_FILENAME);
+
+                Cloudinary::destroy($publicId);
             }
 
             $food->delete();

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class FilmController extends Controller
 {
@@ -78,27 +79,15 @@ class FilmController extends Controller
                 ], 400);
             }
 
-            $data = $request -> all();
-            $data['created_at'] = Carbon::now();
-
-            $image = $request -> file('images');
-            $imageData = base64_encode(file_get_contents($image -> getRealPath()));
-
-            $apikey = env('IMGBB_API_KEY');
-            $url = 'https://api.imgbb.com/1/upload?key=' . $apikey;
-
-            $response = Http::withOptions([
-                'verify' => env('CURL_CERT')
-            ])->asForm()->post($url, [
-                'image' => $imageData
+            $uploadedFile = $request->file('images');
+            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+                'folder' => 'films',
             ]);
 
-
-
-            $responseData = $response->json();
-            if (isset($responseData['data']['display_url'])) {
-                // Lưu link ảnh vào database
-                $data['images'] = $responseData['data']['display_url'];
+            if ($uploadResult && $uploadResult->getSecurePath()) {
+                $data = $request->except('images');
+                $data['images'] = $uploadResult->getSecurePath();
+                $data['created_at'] = Carbon::now();
                 $film = Film::create($data);
 
                 return response() -> json([
@@ -106,6 +95,11 @@ class FilmController extends Controller
                     'message' => 'Tạo phim thành công',
                     'film' => $film
                 ], 201);
+            } else {
+                return response()->json([
+                    'status' => 500,
+                    'message' => 'Không thể tải ảnh lên'
+                ], 500);
             }
 
         } catch (\Exception $e) {
@@ -173,6 +167,14 @@ class FilmController extends Controller
                     'status' => 404,
                     'message' => 'Không tìm thấy phim cần xóa'
                 ], 404);
+            }
+
+            if($film->images) {
+                $url = $film->images;
+                $parts = explode('/', parse_url($url, PHP_URL_PATH));
+                $filename = end($parts);
+                $publicId = 'films/' . pathinfo($filename, PATHINFO_FILENAME);
+                Cloudinary::destroy($publicId);
             }
 
             $film -> delete();
